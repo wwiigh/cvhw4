@@ -3,8 +3,8 @@ Student ID: 313553002
 Name: 蔡琮偉
 ## Introduction
  The objective of the homework is Image Restoration, to remove rain and snow effect, I use
- PromptIR[1] as backbone. To finish the task, I use the implementation form their github repo[2],
- and add SSIM[3] loss to get better performance. With the above method, the model get PSNR
+ PromptIR as backbone. To finish the task, I use the implementation form their github repo,
+ and add SSIM loss to get better performance. With the above method, the model get PSNR
  30.99.
 ## How to install
 ### Install the environment
