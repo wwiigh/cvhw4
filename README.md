@@ -28,7 +28,7 @@ project-root/
 │   │   ├── __init__.py   
 │   ├── dataset.py  
 |   ├── eval.py   
-|   ├── model.py 
+|   ├── model.py  
 |   ├── schedulers.py  
 |   ├── test.py  
 |   ├── train.py  
