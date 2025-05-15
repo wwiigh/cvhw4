@@ -1,42 +1,46 @@
-import csv
-
 from tqdm import tqdm
 import torch
+from torchvision import transforms
+import numpy as np
 
-from model import get_model50
+from model import PromptIR
 from dataset import get_test_dataloader
-from utils import transform_val
 
 
 def test(path):
-    """Start predict testing ans"""
+    """Calculate the val acc"""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = get_model50().to(device)
+    model = PromptIR(decoder=True).to(device)
     model.load_state_dict(torch.load(path)['model_state_dict'])
     print(sum(p.numel() for p in model.parameters()))
     model.eval()
 
-    testdir = "data/test"
-    test_dataloader = get_test_dataloader(testdir,
-                                          transform=transform_val,
-                                          batch_size=1,
-                                          shuffle=False)
+    valdir = "data/test"
+    val_dataloader = get_test_dataloader(valdir,
+                                         batch_size=1, shuffle=True)
+    images_dict = {}
+    for (degraded_image, size, name) in tqdm(val_dataloader):
+        with torch.no_grad():
+            degraded_image = degraded_image.to(device)
+            output = model(degraded_image)
 
-    file = open("prediction.csv", mode='w', newline='')
+        resize = transforms.transforms.Resize((size[0].item(),
+                                               size[1].item()))
+        to_pil = transforms.transforms.ToPILImage()
 
-    writer = csv.writer(file)
-    writer.writerow(["image_name", "pred_label"])
+        output_image = output.squeeze(0).clamp(0, 1).cpu()
 
-    for image, img_path in tqdm(test_dataloader):
-        image = image.to(device)
+        img_pil = to_pil(output_image)
 
-        output = model(image)
-        output = output.argmax(dim=1).item()
-        writer.writerow([img_path[0], output])
+        img_pil = resize(img_pil)
+        img_array = np.array(img_pil)
 
-    file.close()
-    print("finish test")
+        img_array = np.transpose(img_array, (2, 0, 1))
+
+        images_dict[name[0]] = img_array
+
+    np.savez("pred.npz", **images_dict)
 
 
 if __name__ == "__main__":
-    test("experiment/exp_relu/exp_relu_34_acc.pth")
+    test("exp12_ssim_149_loss.pth")
