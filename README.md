@@ -24,17 +24,17 @@ dataset: [https://drive.google.com/file/d/1bEIU9TZVQa-AF_z6JkOKaGp4wYGnqQ8w/view
 create model and data folder, put the model and unzip dataset to corresponding folder. It should look like this  
 project-root/  
 ├── src/  
-│   ├── pytorch_ssim/
-│   │   ├── __init__.py 
+│   ├── pytorch_ssim/  
+│   │   ├── __init__.py   
 │   ├── dataset.py  
 |   ├── eval.py   
 |   ├── model.py 
-|   ├── schedulers.py
+|   ├── schedulers.py  
 |   ├── test.py  
 |   ├── train.py  
 │   ├── utils.py  
 ├── data/       
-│   ├── test/
+│   ├── test/  
 │   ├── train/  
 ├── model/  
 │   ├── pretained.pth     
